@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vsa Vprašanja iz PDF</title>
+    <title>Vsa Vprašanja</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
         .quiz-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); max-width: 800px; width: 100%; position: relative; }
@@ -38,6 +38,54 @@
             transition: 0.3s;
         }
         #ff-btn:hover { opacity: 1; }
+
+       /* --- TEMNI NAČIN (DARK MODE) --- */
+
+/* Ozadje strani */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* Glavni vsebnik kviza */
+body.dark-mode .quiz-container {
+    background-color: #1e1e1e;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+/* Naslovi in vprašanja */
+body.dark-mode h2, 
+body.dark-mode .question {
+    color: #ffffff;
+}
+
+/* Gumbi za odgovore */
+body.dark-mode button.option-btn {
+    background-color: #2c2c2c;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode button.option-btn:hover:not(:disabled) {
+    background-color: #383838;
+    border-color: #3498db;
+}
+
+/* Črte in statistika */
+body.dark-mode .header {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .stats {
+    color: #bbb;
+}
+
+/* Posebna barva za gumb Dark Mode v temnem načinu */
+body.dark-mode #dark-mode-toggle {
+    background: #444;
+    color: white;
+    border: 1px solid #666;
+}
     </style>
 </head>
 <body>
@@ -45,6 +93,7 @@
 <div class="quiz-container">
     <button id="ff-btn" onclick="trySurrender()">FF</button>
     <div class="header">
+        <button id="dark-mode-toggle" class="dark-mode-btn">🌙</button>
         <h2 id="cat-display">uprasanja</h2>
         <div class="stats">Rezultat: <span id="score">0</span> / <span id="answered">0</span></div>
     </div>
@@ -59,176 +108,73 @@
 </div>
 
 <script>
+
+const toggleBtn = document.getElementById('dark-mode-toggle');
+const body = document.body;
+
+toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    
+    // Sprememba ikone na gumbu
+    if (body.classList.contains('dark-mode')) {
+        toggleBtn.textContent = '☀️'; // Sonce za preklop na svetlo
+    } else {
+        toggleBtn.textContent = '🌙'; // Lunca za preklop na temno
+    }
+});
+
    const questions = [
     
-{ q: "Vašo vizualno podobo ne sestavlja", a: "Sposobnost opazovanja", o: ["Splošni izgled", "Sposobnost opazovanja", "Drža", "Emocionalno stanje"] },
-{ q: "Action model komponenta Techniques (tehnike):", a: "Tehnike kako podajamo sugestije sogovorniku", o: ["Tehnike discipliniranja sogovornika", "Tehnike kako podajamo sugestije sogovorniku", "Tehnike spravljanja sogovornika v trans", "Tehnike postavljanja ciljev sogovornika"] },
-{ q: "Če nimamo ciljev in ne obvladujemo komunikacije navadno:", a: "imamo več konfliktov", o: ["imamo manj konfliktov", "imamo več časa za konflikte", "imamo enako konfliktov samo so le ti na drugih področjih", "imamo več konfliktov"] },
-{ q: "Povezovanje gledalcev v medijih ni odvisno od:", a: "Prilagoditve razmišljanja igralcev v spotu", o: ["Prilagoditve tona (na primer glasnost, višina)", "Prilagoditve dinamičnosti (na primer hitrost gibanja, dihanja)", "Prilagoditve vizualne podobe (na primer družina, rase)", "Prilagoditve razmišljanja igralcev v spotu"] },
-{ q: "Action model komponenta Aim (ciljanje pomeni):", a: "Tehnike postavljanja lastnih ciljev", o: ["Tehnike postavljanja lastnih ciljev", "Coaching", "Tehnike discipliniranja sogovornika", "Tehnike postavljanja ciljev sogovornika"] },
-{ q: "Action model komponenta Identity (identiteta):", a: "Tehnike za pridobivanje več informacij o identiteti sogovornika", o: ["Tehnike spravljanja sogovornika v trans in propad identitete", "Tehnike discipliniranja sogovornika", "Tehnike za pridobivanje več informacij o identiteti sogovornika", "Tehnike postavljanja ciljev sogovorniku"] },
-{ q: "Action model ne sestavlja komponenta:", a: "Osredotočenje (focus)", o: ["Priložnosti (opportunity)", "Osredotočenje (focus)", "Povezovanje (connection)", "Identiteta (identity)"] },
-{ q: "Action model komponenta Opportunity (priložnosti):", a: "Tehnike ustvarjanja priložnosti za povečano sugestibilnost", o: ["Tehnike postavljanja ciljev sogovornika", "Tehnike podajanja sugestij", "Vodenje sogovornika v smer ciljev", "Tehnike ustvarjanja priložnosti za povečano sugestibilnost"] },
-{ q: "Če imate z nekom dobro povezavo vam bo ta:", a: "Zaupal več informacij", o: ["Zaupal več informacij", "Nasprotoval kdajkoli bo lahko", "Nič od navedenega", "Se vam smejal, ko ste vi resni"] },
-{ q: "Ko grem na razgovor za službo se želim obleči in urediti?", a: "Čim bolj podobno kot so zaposleni v izbranem podjetju", o: ["Čim bolj podobno kot so zaposleni vendar z veliko nakita v vsekem primeru", "Čim bolj različno kot so zaposleni v izbranem podjetju", "Oblačila ne igrajo nobene vloge na povezovanje", "Čim bolj podobno kot so zaposleni v izbranem podjetju"] },
-
-{ q: "Načelo kontrasta možganov pomeni:", a: "možgani poznajo le razliko med toplim in mrzlim", o: ["možgani natanko vedo kaj je mrzlo", "možgani natanko vedo kaj je toplo", "možgani poznajo le razliko med toplim in mrzlim", "Nič od navedenega"] },
-{ q: "Merilo uspešnosti komunikacije je:", a: "Da oseba naredi tisto kar želimo oz. ji sugeriramo", o: ["Da oseba naredi tisto kar želimo oz. ji sugeriramo", "Da je oseba vesela oz. ji sugeriramo, da je", "Da oseba prikimava, kadar jo pogledamo", "Da se oseba z nami strinja"] },
-{ q: "Ritualna komunikacija je:", a: "Če komuniciramo brez posebnih ciljev, zgolj z namenom, da smo v stikih", o: ["Nič od navedenega", "Če komuniciramo brez posebnih ciljev, zgolj z namenom, da smo v stikih", "Če uporabimo najprej najmočnejše tehnike", "Če ciljno uporabljamo tehnike"] },
-{ q: "Vpliv na nezavedni ravni je če ima:", a: "Oseba ima občutek, da se je sama odločila", o: ["Oseba ima občutek, da se bo odločila priti nam", "Oseba ima občutek, da pritiskamo na odločitev", "Oseba ima občutek, da se je sama odločila", "Nič od navedenega"] },
-{ q: "Kateri element je ključnega pomena v ritualni komunikaciji?", a: "Simbolika in ponavljanje", o: ["Simbolika in ponavljanje", "Individualna kreativnost", "Spontanost in improvizacija", "Logična argumentacija"] },
-{ q: "Ciljno usmerjena komunikacija je:", a: "Če komuniciramo z v naprej postavljenim ciljem", o: ["Če je naš cilj skrb za dobro počutje sogovornika", "Nič od navedenega", "Če uporabimo najprej najmočnejše tehnike", "Če komuniciramo z v naprej postavljenim ciljem"] },
-{ q: "Učinkovito komuniciranje je:", a: "Z najmanjšimi resursi (sredstvi) doseči določen rezultat", o: ["Z najmanjšimi resursi (sredstvi) doseči določen rezultat", "Brez resursov (sredstvi) ne doseči določenega rezultata", "Z največjimi resursi (sredstvi) doseči določen rezultat", "Z najmanjšimi resursi (sredstvi) doseči rezultat, ki ga ne želimo"] },
-{ q: "Ravnanje je etično, če so:", a: "Cilj etičen", o: ["Nič od navedenega", "Tehnike vplivanja etične", "Tisti kdor je vplivan etičen", "Cilj etičen"] },
-{ q: "Pro-aktivna komunikacija pomeni:", a: "z najmanjšo mogočo sugestijo dosežemo želeni cilj", o: ["najprej uporabimo najbolj agresivne tehnike", "Nič od navedenega", "najprej uporabimo tehnike, ki jih najmanj poznamo", "z najmanjšo mogočo sugestijo dosežemo želeni cilj"] },
-{ q: "Vpliv na zavedni ravni je:", a: "Večinoma kritično ovrednoten", o: ["Navadno bolj učinkovit saj ga oseba lahko analizira", "Oseba ga rada izvrši brez razmišljanja", "Ponavadi naredi boljše emocije", "Večinoma kritično ovrednoten"] },
-
-{ q: "Poznamo dva načina prikimavanja:", a: "Prikrito in klasično prikimavanje", o: ["Prikimavanje navzdol in prikimavanje z nasmeškom", "Prikrito in klasično prikimavanje", "Prikimavanje med tišino in med govorom", "Prikimavanje navzdol in vstran"] },
-{ q: "Satir kategorija – preusmerjevalec pozornosti (angl. Distractor)):", a: "povečuje pozornost in delno tudi emocije", o: ["povečuje pozornost in delno tudi emocije", "znižuje emocije in povečuje razmišljanje", "znižuje emocije in znižuje pozornost", "povečuje emocije in znižuje pozornost"] },
-{ q: "Satir kategorija – Prosilec (placator):", a: "povečuje emocije", o: ["znižuje emocije in povečuje razmišljanje", "znižuje emocije in znižuje razmišljanje", "povečuje emocije", "povečuje pozornost in znižuje razmišljanje"] },
-{ q: "Satir kategorija – Izravnalec (Leveler):", a: "znižuje emocije", o: ["povečuje emocije", "povečuje pozornost in emocije", "znižuje razmišljanje", "znižuje emocije 5"] },
-{ q: "Satir kategorija – Obtoževalec (Blamer):", a: "povečuje emocije in povečuje pozornost", o: ["znižuje emocije in povečuje razmišljanje", "znižuje emocije in znižuje razmišljanje", "povečuje razmišljanje", "povečuje emocije in povečuje pozornost"] },
-{ q: "Satir kategorija – racionalist (computer):", a: "znižuje emocije in povečuje razmišljanje", o: ["povečuje pozornost", "znižuje emocije in znižuje razmišljanje", "znižuje emocije in povečuje razmišljanje", "povečuje emocije in povečuje razmišljanje"] },
-{ q: "Očesni stik alfe (dominantne osebe) mora biti:", a: "Brez mežikanja in široko odprte oči", o: ["Ne uporabljamo direktnega očesnega stika", "Brez mežikanja in široko odprte oči", "Prikrit", "Z mežikanjem"] },
-{ q: "Direkten očestni stik pomeni:", a: "Povečevanje emocij in stopnjevanje transa", o: ["Zmanjševanje emocij in povečevanje transa", "Povečevanje emocij in stopnjevanje transa", "Zmanjševanje emocij in povezovanja", "Zmanjševanje emocij in transa"] },
-{ q: "Dve komponenti emocionalnega kolesa sta:", a: "Zadovoljstvo in aktivnost", o: ["Povezovanje in razdruževanje", "Zadovoljstvo in aktivnost", "Veselje in žalost", "Depresija in navdušenje"] },
-{ q: "Pri prikritem (Sandrinem) nasmešku se nasmejemo:", a: "Prikrito – ravno toliko da oseba na nezavedni ravni nasmešek zazna", o: ["Odprto in v celoti", "Prikrito – ravno toliko da oseba na nezavedni ravni nasmešek zazna", "Nasmehnemo se šele, ko rečemo dober dan", "Sploh se ne nasmehnemo"] },
-
-{ q: "Povezovanje in stopnjevanje je tehnika, kjer:", a: "Najprej povemo nekaj, kar je sigurno resnično in tudi zaključimo z nečim kar je sigurno resnično", o: ["Najprej povem nekaj resničnega potem pa nekaj neresničnega", "Najprej povem nekaj neresničnega potem pa nekaj resničnega", "Vseskozi govorimo laži", "Najprej povemo nekaj, kar je sigurno resnično in tudi zaključimo z nečim kar je sigurno resnično"] },
-{ q: "Pojasnjevanje razloga je tehnika, ki je razvidna na naslednjem primeru:", a: "Pomij posodo, ker je to zelo pomembno", o: ["Če ne boš pomil posode potem pospravi vsaj sobo", "Če boš pomil posodo potem pospravi še sobo", "Pomij posodo, ker je to zelo pomembno", "Pomij posodo in pospravi sobo"] },
-{ q: "Pozitivni primer uporabe nikalnic je:", a: "Ne bom trdil, da si najboljši smučar", o: ["Vem da nisi slab smučar, saj si veliko treniral", "Če smučaš hitro potem nisi slab smučar", "Najslabši smučar si", "Ne bom trdil, da si najboljši smučar"] },
-{ q: "Negativni primer uporabe nikalnic je:", a: "Ne bom trdil, da je ta izdelek zanič", o: ["Ta idelek je slab", "Ta izdelek ni najboljši", "Vem, da je ta izdele dober", "Ne bom trdil, da je ta izdelek zanič"] },
-{ q: "Omejitev možnosti je tehnika, ki je razvidna na naslednjem primeru:", a: "Pomij posodo sedaj ali pa jo pomij do večera", o: ["Pomij posodo sedaj ali pa jo pomij do večera", "Če boš pomil posodo potem pospravi še sobo", "Če ne boš pomil posode potem pospravi vsaj sobo", "Pomij posodo in pospravi sobo"] },
-{ q: "Tehnika uporabe kršitve časov je:", a: "Ko imate izdelek v svojih rokah", o: ["Ko imate izdelek v svojih rokah", "Če bi imeli izdelek v svojih rokah", "Če boste kupili ta izdelek", "Ko boste imeli izdelek v svojih rokah"] },
-
-{ q: "Kaj pomeni kakovost v projektu?", a: "Izpolnjevanje dogovorjenih zahtev", o: ["Višji stroški", "Izpolnjevanje dogovorjenih zahtev", "Več funkcionalnosti", "Najvišja možna raven izvedbe"] },
-{ q: "Kaj je cilj upravljanja kakovosti?", a: "Zagotoviti, da projekt izpolni pričakovanja", o: ["Povečati obseg", "Zmanjšati proračun", "Zagotoviti, da projekt izpolni pričakovanja", "Skrajšati projekt"] },
-{ q: "Kaj je nadzor kakovosti?", a: "Preverjanje, ali so rezultati skladni z zahtevami", o: ["Planiranje časa", "Dodeljevanje virov", "Preverjanje, ali so rezultati skladni z zahtevami", "Spreminjanje obsega"] },
-{ q: "Kaj pomeni tveganje nizke kakovosti multimedijskega izdelka?", a: "Izdelek ne ustreza pričakovanjem uporabnikov ali naročnika", o: ["Izdelek vključuje preveč funkcij", "Izdelek preseže proračun", "Izdelek ne ustreza pričakovanjem uporabnikov ali naročnika", "Izdelek se razvija počasneje od načrtovanega"] },
-{ q: "Kako lahko ekipa izboljša uporabniško izkušnjo?", a: "S povratnimi informacijami uporabnikov.", o: ["S povratnimi informacijami uporabnikov.", "Z ignoriranjem prvih rezultatov testiranja.", "Z zmanjšanjem števila funkcij.", "Z uporabo dražje tehnologije."] },
-{ q: "Kaj je cena slabe kakovosti?", a: "Stroški popravil in nezadovoljstva", o: ["Stroški popravil in nezadovoljstva", "Stroški komunikacije", "Stroški planiranja", "Stroški virov"] },
-{ q: "Zakaj je pomembna konsistentnost v multimedijskih izdelkih?", a: "Da uporabnik ne doživi zmede ali frustracij pri uporabi izdelka.", o: ["Da se zmanjša čas za razvoj.", "Da izdelek deluje na vseh operacijskih sistemih.", "Da uporabnik ne doživi zmede ali frustracij pri uporabi izdelka.", "Da se poveča število funkcij."] },
-{ q: "Kaj je namen prototipov v testiranju?", a: "Preizkusiti zasnovo in funkcionalnost pred končno izvedbo.", o: ["Preizkusiti zasnovo in funkcionalnost pred končno izvedbo.", "Omejiti testiranje na tehnične parametre.", "Dokumentirati vse spremembe projekta.", "Ustvariti končni izdelek."] },
-{ q: "Zakaj je pomembna dostopnost multimedijskega izdelka?", a: "Da je izdelek uporaben za vse uporabnike, tudi z različnimi potrebami.", o: ["Da je izdelek dostopen samo tehnično podkovanim uporabnikom.", "Da je izdelek omejen na določeno platformo.", "Da izdelek deluje samo v specifičnih pogojih.", "Da je izdelek uporaben za vse uporabnike, tudi z različnimi potrebami."] },
-{ q: "Zakaj je pomembno vključiti uporabnike v proces testiranja?", a: "Da se pridobijo povratne informacije iz resničnega okolja.", o: ["Da se zmanjša število testiranj.", "Da se določi končni proračun.", "Da se pridobijo povratne informacije iz resničnega okolja.", "Da se izboljša tehnična izvedba."] },
-{ q: "Če ekipa ugotovi, da določene naloge trajajo dlje, kot je bilo načrtovano, kaj je najprimernejši ukrep v okviru spremljanja projekta?", a: "Preveriti vzroke zamud in oceniti njihov vpliv na celoten projekt", o: ["Ustaviti projekt", "Prezreti zamude, dokler projekt še ni zaključen", "Samodejno podaljšati roke vseh nalog", "Preveriti vzroke zamud in oceniti njihov vpliv na celoten projekt"] },
-{ q: "Vodja projekta ugotovi, da se projekt še vedno izvaja po načrtu, vendar se pojavijo majhna odstopanja v porabi časa. Kaj je najprimernejši prvi korak pri spremljanju projekta?", a: "Analiza odstopanj glede na načrtovane cilje in roke", o: ["Zamenjava članov ekipe", "Takojšnja sprememba ciljev projekta", "Povečanje proračuna", "Analiza odstopanj glede na načrtovane cilje in roke"] },
-{ q: "Kaj mora vsebovati poročilo iz revizije, da je uporabno in popolno?", a: "Vse našteto", o: ["Datum in lokacijo", "Dnevni red", "Sklepe in ugotovitve", "Vse našteto"] },
-{ q: "Vodja projekta želi zagotoviti uspešno izvedbo. Katere elemente mora redno spremljati?", a: "Vse našteto", o: ["Porabo stroškov", "Spoštovanje rokov", "Tveganja in preventivne ukrepe", "Skladnost funkcionalnosti s specifikacijo", "Vse našteto"] },
-{ q: "Vodja projekta pripravlja poročilo za naročnika. Kaj mora poročilo o napredku predvsem omogočiti?", a: "Pregled dejanskega stanja projekta glede na načrt", o: ["Podroben opis vseh izvedenih nalog", "Pregled dejanskega stanja projekta glede na načrt", "Načrtovanje prihodnjih projektov", "Utemeljitev morebitnih zamud brez podatkov"] },
-{ q: "Med projektom pride do spremembe zahtev. Kam jo je treba uradno zapisati?", a: "V vmesno poročilo (revizijo)", o: ["Nikamor", "V vmesno poročilo (revizijo)", "V tabelo virov", "V začetni predlog projekta"] },
-{ q: "Projekt vključuje več mejnikov in kompleksne naloge. Kateri pristop najbolj omogoča objektivno spremljanje napredka?", a: "Uporaba kazalnikov uspešnosti (KPI)", o: ["Zamenjava članov ekipe", "Povečanje proračuna", "Uporaba kazalnikov uspešnosti (KPI)", "Spreminjanje ciljev"] },
-{ q: "Vodja projekta želi redno preverjati napredek, odprta tveganja in odstopanja od plana. Kateri tip sestanka je za to najprimernejši?", a: "Revizijski sestanek", o: ["Neformalni timski pogovor", "Revizijski sestanek", "Sestanek z vplivneži", "Kickoff sestanek"] },
-{ q: "Kateri pristop najbolje opisuje učinkovito spremljanje projekta?", a: "Sočasno spremljanje časa, stroškov, obsega, kakovosti in tveganj", o: ["Spremljanje samo terminskega načrta", "Sočasno spremljanje časa, stroškov, obsega, kakovosti in tveganj", "Spremljanje samo stroškov", "Spremljanje projekta šele ob zaključku"] },
-{ q: "Naročnik prevzema končni izdelek. Kaj mora biti zagotovljeno ob formalni predaji?", a: "Skladnost z dogovorjenimi specifikacijami", o: ["Načrtovanje novega projekta", "Pregled finančnih tokov", "Skladnost z dogovorjenimi specifikacijami", "Dodajanje dodatnih funkcij"] },
-{ q: "Zakaj je pomembno projekt zaključiti pravočasno?", a: "Da se preprečijo nepotrebni stroški in zamude", o: ["Da se spremeni terminski plan", "Da se podaljša projekt", "Da se preprečijo nepotrebni stroški in zamude", "Da se poveča obseg projekta"] },
-{ q: "Zakaj je zbiranje povratnih informacij ob zaključku projekta pomembno?", a: "Za izboljšanje procesov v prihodnjih projektih", o: ["Za odpravo vseh odprtih vprašanj", "Za zmanjšanje ekipe", "Za izboljšanje procesov v prihodnjih projektih", "Za razširitev projekta"] },
-{ q: "Kdaj se projekt z vidika vodje projekta šteje kot zaključen?", a: "Ko je pripravljeno zaključno poročilo", o: ["Ko je pripravljeno zaključno poročilo", "Ob predaji izdelka", "Po postprodukciji", "Ob dosegu ciljev"] },
-{ q: "Projekt je dosegel vse zastavljene cilje, naročnik je potrdil rezultate, dodatnih nalog ni več. V kateri fazi se projekt nahaja?", a: "Zaključevanje projekta", o: ["Načrtovanje projekta", "Zaključevanje projekta", "Testiranje izdelka", "Izvedba projekta"] },
-{ q: "Po zaključku projekta ekipa pregleda tveganja. Kaj je glavni namen tega pregleda?", a: "Ocena, kako so bila tveganja obvladana", o: ["Zgolj seznam tveganj brez analize", "Ocena, kako so bila tveganja obvladana", "Iskanje novih tveganj za isti projekt", "Izogibanje obravnavi tveganj"] },
-{ q: "Po zaključku projekta vodja primerja načrtovane in dejanske rezultate. Kaj s tem analizira?", a: "Dosežene cilje glede na začetne načrte", o: ["Dosežene cilje glede na začetne načrte", "Nove projektne naloge", "Nove mejnike", "Potrebo po dodatnih sredstev"] },
-{ q: "Projekt je uspešno zaključen in rezultati so pripravljeni za uporabo. Kaj je glavni namen formalnega zaključka projekta?", a: "Uradno zaključiti vse dejavnosti in predati rezultate", o: ["Pripraviti nov terminski načrt", "Zamenjati projektno ekipo", "Razširiti obseg projekta", "Uradno zaključiti vse dejavnosti in predati rezultate"] },
-{ q: "Kdo je odgovoren za uradni zaključek projekta?", a: "Vodja projekta", o: ["Celotna projektna ekipa", "Vodja projekta", "Zunanji svetovalci", "Naročnik"] },
-{ q: "Preden vodja projekta formalno zaključi projekt, mora preveriti ključni pogoj. Kateri?", a: "Ali so vsi cilji projekta doseženi", o: ["Ali so vsi cilji projekta doseženi", "Ali so na voljo dodatna sredstva", "Ali je obseg projekta spremenjen", "Ali so dodeljene nove naloge"] },
-{ q: "Vodja projekta pripravlja dokument, ki bo služil kot podlaga za prihodnje projekte. Kateri je glavni namen zaključnega poročila?", a: "Povzetek dosežkov, izkušenj in priporočil", o: ["Dodeljevanje novih sredstev", "Razširitev projektnega obsega", "Povzetek dosežkov, izkušenj in priporočil", "Evidentiranje nerešenih težav"] },
-
-{ q: "Kaj vpliva na natančnost ocene stroškov?", a: "Stopnja podrobnosti WBS", o: ["Število sestankov", "Število deležnikov", "Stopnja podrobnosti WBS", "Velikost ekipe"] },
-{ q: "Kaj so glavni stroški projekta?", a: "Stroški dela, materialov in opreme", o: ["Stroški dela, materialov in opreme", "Stroški neuspeha projekta", "Stroški trženja", "Stroški zaključka projekta"] },
-{ q: "Kako lahko ocenimo stroške projekta v zgodnjih fazah načrtovanja?", a: "S primerjavo s prejšnjimi projekti podobne vrste", o: ["Z analizo tveganj", "S pripravo natančnega proračuna", "S preskočitvijo ocene in začetkom izvajanja projekta", "S primerjavo s prejšnjimi projekti podobne vrste"] },
-{ q: "Kaj pomeni koncept \"stroški kakovosti\" v projektnem upravljanju?", a: "Stroški, povezani s kakovostjo izdelka ali storitve", o: ["Dodatni stroški za izboljšave projekta", "Stroški za usposabljanje zaposlenih", "Stroški, povezani s kakovostjo izdelka ali storitve", "Stroški dela"] },
-{ q: "Kako zmanjšati stroške projekta?", a: "Optimizirati vire in odpraviti nepotrebne naloge", o: ["Preložiti zaključek projekta", "Optimizirati vire in odpraviti nepotrebne naloge", "Povečati proračun", "Zmanjšati število članov ekipe"] },
-{ q: "Tipične enote v medijski produkciji:", a: "vse našteto", o: ["vse našteto", "kos", "ura", "snemalni dan"] },
-{ q: "Kaj vključuje prodajna cena projekta?", a: "vse našteto", o: ["lastno ceno projekta", "vse našteto", "načrtovani dobiček", "popuste"] },
-{ q: "Tipični stroški projekta so:", a: "vse našteto", o: ["vse našteto", "kadri", "oprema", "dovoljenja"] },
-{ q: "Kaj vključuje analiza stroškov in koristi (cost-benefit analysis)?", a: "Primerjavo stroškov z pričakovanimi koristmi projekta", o: ["Oceno stroškov zaključne faze projekta", "Primerjavo stroškov z pričakovanimi koristmi projekta", "Načrtovanje novega projekta", "Določanje virov financiranja"] },
-{ q: "Podjetje XYZ je nabavilo novo opremo v vrednosti 100.000 EUR. Oprema ima predvideno življenjsko dobo 5 let. Izračunajte letno amortizacijo.", a: "20.000 EUR", o: ["25.000 EUR", "10.000 EUR", "25.000 EUR", "20.000 EUR"] },
-{ q: "Kaj naredimo, če ugotovimo, da je velikost tveganja izjemna?", a: "ponovno načrtujemo projekt", o: ["ignoriramo", "vse od naštetega", "vpišemo v register tveganj in redno spremljamo, da se tveganje ne uresniči", "ponovno načrtujemo projekt"] },
-{ q: "Kdo je običajno odgovoren za spremljanje in obvladovanje tveganj v projektu?", a: "Celotna projektna ekipa", o: ["Le vodja projekta", "Samo finančni nadzornik", "Posebna ekipa za tveganja", "Celotna projektna ekipa"] },
-{ q: "Katera faza v življenjskem ciklu projekta se osredotoča na izvajanje načrtovanih odzivov na tveganja?", a: "Spremljanje in obvladovanje", o: ["Zaključevanje", "Izvajanje", "Spremljanje in obvladovanje", "Načrtovanje"] },
-{ q: "Vplivneži projekta:", a: "imajo vpliv na izvedbo projekta", o: ["sodelujejo v projektu", "imajo vpliv na izvedbo projekta", "skrbijo za tehniko projekta", "vse od naštetega"] },
-{ q: "Kaj vključuje identifikacija tveganj?", a: "Prepoznavanje možnih tveganj, ki lahko vplivajo na projekt", o: ["Analizo finančnih potreb projekta", "Prepoznavanje možnih tveganj, ki lahko vplivajo na projekt", "Zaključek vseh tveganj", "Razporeditev nalog med člane ekipe"] },
-{ q: "Katera tveganja ne upoštevamo pri načrtovanju projekta?", a: "majhna", o: ["majhna", "srednja", "izjemna", "velika"] },
-{ q: "Kaj vključuje analiza tveganj?", a: "Identifikacijo, oceno in določitev prioritet tveganj", o: ["Pripravo poročila o projektu", "Identifikacijo, oceno in določitev prioritet tveganj", "Razdelitev odgovornosti znotraj ekipe", "Zaključek vseh odprtih nalog"] },
-{ q: "Pri opisu posledic se osredotočimo:", a: "vse od naštetega", o: ["stroške projekta", "čas izvedbe", "vse od naštetega", "obseg projekta"] },
-{ q: "Kaj pomeni tveganje za avtorske pravice v multimedijskih projektih?", a: "Možnost, da projekt krši avtorske pravice ali intelektualno lastnino", o: ["Možnost, da projekt krši avtorske pravice ali intelektualno lastnino", "Nezmožnost dokončanja projekta", "Slaba komunikacija z naročnikom", "Pomanjkanje tehničnih rešitev"] },
-{ q: "Kateri odziv na tveganje se uporablja za zmanjšanje negativnega vpliva tveganja?", a: "Zmanjševanje", o: ["Izogibanje", "Zmanjševanje", "Preusmerjanje", "Deljenje"] },
-{ q: "Deležnik izraža nezadovoljstvo z napredkom projekta. Kakšna je najverjetnejša posledica za projekt?", a: "Povečano tveganje za uspešnost projekta", o: ["Manj sprememb v projektu", "Hitrejši zaključek", "Večja podpora projektu", "Povečano tveganje za uspešnost projekta"] },
-{ q: "Deležniki imajo nerealna pričakovanja glede obsega in rokov. Kako mora vodja projekta ukrepati?", a: "Z aktivnim komuniciranjem in usklajevanjem pričakovanj", o: ["Z aktivnim komuniciranjem in usklajevanjem pričakovanj", "Z ignoriranjem zahtev", "Z zmanjšanjem obsega brez obvestila", "Z avtomatičnim sprejemanjem vseh želja"] },
-{ q: "V projektni ekipi se pojavljajo napake, ker člani različno interpretirajo prioritetne naloge. Vodja projekta želi zmanjšati tovrstna tveganja. Kateri ukrep najbolje naslavlja osnovni namen notranje komunikacije?", a: "Zagotoviti, da vsi člani ekipe enotno razumejo svoje naloge in odgovornosti", o: ["Centralizirati vse informacije samo pri vodji projekta", "Zagotoviti, da vsi člani ekipe enotno razumejo svoje naloge in odgovornosti", "Omejiti količino informacij, da se zmanjša zmeda", "Povečati število sestankov brez spremembe vsebine"] },
-{ q: "Projektna ekipa deluje v več državah. Kateri dejavnik mora komunikacijski načrt nujno upoštevati?", a: "Različne kulturne norme, vrednote in komunikacijske stile", o: ["Le formalno komunikacijo", "Ignoriranje lokalnih posebnosti", "Različne kulturne norme, vrednote in komunikacijske stile", "Izključno uporabo enega jezika"] },
-{ q: "Vodja projekta želi zmanjšati odpor do sprememb in povečati podporo projektu. Kateri pristop najbolj predstavlja aktivno vključevanje deležnikov?", a: "Redno sodelovanje, izmenjava mnenj in dvosmerna komunikacija", o: ["Redno sodelovanje, izmenjava mnenj in dvosmerna komunikacija", "Občasno pošiljanje poročil", "Ignoriranje predlogov deležnikov", "Enosmerno obveščanje brez možnosti odziva"] },
-{ q: "Zakaj so redne povratne informacije v projektni ekipi ključne za uspeh projekta?", a: "Omogočajo pravočasno zaznavo težav in izboljšanje sodelovanja", o: ["Povečujejo količino komunikacije", "Omogočajo pravočasno zaznavo težav in izboljšanje sodelovanja", "Zmanjšujejo potrebo po načrtovanju", "Nadomeščajo formalno poročanje"] },
-{ q: "Deležniki izražajo nezadovoljstvo, čeprav projekt poteka skladno z načrtom. Kaj je najverjetnejši vzrok?", a: "Neusklajena ali napačno komunicirana pričakovanja", o: ["Preveč sestankov", "Neusklajena ali napačno komunicirana pričakovanja", "Preveč formalne dokumentacije", "Previsoka kakovost rezultatov"] },
-{ q: "V projektu je jasno določeno, kdo nalogo dejansko izvede, vendar ni jasno, kdo jo potrdi. Katera vloga v RACI matriki predstavlja izvajalca naloge?", a: "Responsible – oseba, ki nalogo izvaja", o: ["Consulted – svetuje", "Responsible – oseba, ki nalogo izvaja", "Accountable – potrjuje rezultat", "Informed – prejema obvestila"] },
-{ q: "Zakaj mora projektna ekipa jasno določiti komunikacijske kanale?", a: "Da informacije pravočasno in zanesljivo dosežejo vse člane ekipe", o: ["Da se zmanjšajo stroški", "Da se poveča število sestankov", "Da informacije pravočasno in zanesljivo dosežejo vse člane ekipe", "Da se omeji dostop"] },
-{ q: "Kdo je v projektni ekipi običajno odgovoren za pripravo komunikacijskega načrta?", a: "Vodja projekta", o: ["Finančni svetovalec", "Vodja projekta", "Zunanji izvajalec", "Najmlajši član ekipe"] },
-
-{ q: "Kdaj se uporabljajo zunanje nabave?", a: "Ko notranji viri niso na voljo", o: ["Ko notranji viri niso na voljo", "Nikoli", "Le ob zaključku", "Vedno"] },
-{ q: "Kaj je odgovornost članov projektne ekipe?", a: "Izvajanje dodeljenih nalog", o: ["Izvajanje dodeljenih nalog", "Spreminjanje obsega", "Odločanje o proračunu", "Potrjevanje projekta"] },
-{ q: "Kako se lahko izboljša dostopnost projektnih virov?", a: "S sprotnim načrtovanjem in rezervacijo.", o: ["Z omejevanjem uporabe določenim članom ekipe.", "Z izogibanjem uporabi zunanjih virov.", "Z zmanjšanjem obsega projekta.", "S sprotnim načrtovanjem in rezervacijo."] },
-{ q: "Kaj pomeni razpoložljivost virov?", a: "Čas, ko so viri na voljo za projekt", o: ["Čas, ko so viri na voljo za projekt", "Kakovost virov", "Število projektov", "Strošek virov"] },
-{ q: "Kaj vključuje vzdrževanje opreme?", a: "Redne preglede in popravila.", o: ["Zamenjavo z novimi napravami za vsak projekt.", "Uporabo brez dodatnih preverjanj.", "Razporeditev opreme za dolgotrajno shranjevanje.", "Redne preglede in popravila."] },
-{ q: "_________(dopolnite) animira 3D-objekt/karakter:", a: "3D-oblikovalec in animator", o: ["mojster slikovne obdelave", "3D-oblikovalec in animator", "mojster za posebne učinke", "2D-oblikovalec in animator"] },
-{ q: "Kaj je kompetenca?", a: "Znanje in sposobnosti posameznika", o: ["Osebna lastnost", "Položaj v podjetju", "Plača", "Znanje in sposobnosti posameznika"] },
-{ q: "Kaj je posledica pomanjkanja virov?", a: "Zamude in obremenitve", o: ["Nižji stroški", "Zamude in obremenitve", "Višja kakovost", "Manj tveganj"] },
-{ q: "Kaj je konflikt virov?", a: "Ko isti vir potrebuje več aktivnosti hkrati", o: ["Ko ni tveganj", "Ko isti vir potrebuje več aktivnosti hkrati", "Ko je preveč časa", "Ko ni dovolj dokumentacije"] },
-{ q: "Kaj pomeni planiranje virov?", a: "Določanje, kateri viri so potrebni in kdaj", o: ["Spremljanje stroškov", "Izvajanje nalog", "Zaključek projekta", "Določanje, kateri viri so potrebni in kdaj"] },
-
-{ q: "Ekipa ne more začeti testiranja, dokler ni dokončana implementacija. Kako najnatančneje opišemo to razmerje?", a: "Odvisnost: ena dejavnost vpliva na začetek/izvedbo druge", o: ["Tveganje", "Odvisnost: ena dejavnost vpliva na začetek/izvedbo druge", "Stroškovna omejitev", "Kadrovski problem"] },
-{ q: "Med izvedbo član ekipe doda funkcionalnost, ki ni bila dogovorjena in ni v specifikaciji. Kako to najnatančneje opišemo v projektnim smislu?", a: "Kot delo izven obsega (aktivnosti niso vključene v projekt)", o: ["Kot poročanje o napredku projekta", "Kot spremembe, ki zmanjšujejo realizirane koristi", "Kot delo izven obsega (aktivnosti niso vključene v projekt)", "Kot standardne naloge vodenja projekta"] },
-{ q: "Pred izdelavo gantograma mora ekipa določiti, v katerem vrstnem redu se naloge izvajajo (kaj mora biti prej in kaj lahko poteka vzporedno). Kaj pomeni zaporedje dejavnosti?", a: "Določitev logičnega vrstnega reda dejavnosti", o: ["Dodelitev nalog članom ekipe", "Določitev logičnega vrstnega reda dejavnosti", "Poročanje vodstvu", "Razdelitev stroškov"] },
-{ q: "Na delavnici zahtev nekdo poda izjavo: Meni je to všeč, ker je lepo. Katera možnost NI primer zahteve, ker nima poslovne potrebe ali merila?", a: "Osebno mnenje brez poslovne potrebe", o: ["Osebno mnenje brez poslovne potrebe", "Zakonska zahteva", "Funkcionalna zahteva", "Nefunkcionalna zahteva"] },
-{ q: "Projekt se začne brez jasne opredelitve, kaj sodi zraven in kaj ne. Kaj je najbolj verjetna posledica?", a: "Poveča se tveganje neuspeha (nesporazumi, scope creep, zamude)", o: ["Stroški so nižji", "Projekt je hitrejši", "Poveča se tveganje neuspeha (nesporazumi, scope creep, zamude)", "Manj je sprememb"] },
-{ q: "Med izvedbo projekta naročnik zahteva dodatne funkcionalnosti, ekipa pa se ne strinja, ali to sodi v dogovor. Kaj v praksi določa obseg projekta?", a: "Kaj je vključeno in kaj izključeno iz projekta", o: ["Kaj je vključeno in kaj izključeno iz projekta", "Koliko časa traja projekt", "Koliko projekt stane", "Koliko ljudi sodeluje"] },
-{ q: "Projektna ekipa meni, da je izdelek končan, naročnik pa želi formalno potrditev, da dostavljeni rezultati ustrezajo dogovoru. Kaj pomeni validacija obsega?", a: "Potrditev rezultatov s strani naročnika", o: ["Potrditev rezultatov s strani naročnika", "Notranji pregled ekipe", "Ocena tveganj", "Testiranje kakovosti"] },
-{ q: "Pred zaključkom faze želi vodja projekta uradno potrditi, da je obseg pravilno razumljen in sprejet. Kdo potrjuje obseg projekta?", a: "Naročnik ali sponzor", o: ["Zunanji izvajalec", "Vsak član ekipe", "Računovodstvo", "Naročnik ali sponzor"] },
-{ q: "Pri zbiranju zahtev ekipa zapisuje, kaj sistem mora omogočati in kaj deležniki pričakujejo. Kaj je “zahteva” v projektnem smislu?", a: "Potreba ali pričakovanje deležnika", o: ["Potreba ali pričakovanje deležnika", "Končni izdelek", "Strošek", "Časovni mejnik"] },
-{ q: "Vodja projekta želi prikazati delo projekta v več nivojih (od velike slike do podrobnih nalog). Kateri opis najbolje ustreza WBS?", a: "Hierarhična razčlenitev dela projekta", o: ["Organizacijska shema", "Časovni razpored", "Finančni plan", "Hierarhična razčlenitev dela projekta"] },
-
-{ q: "Kateri dejavnik najbolj vpliva na uporabniško zadovoljstvo?", a: "Enostavnost uporabe in doseganje ciljev", o: ["Cena izdelka", "Enostavnost uporabe in doseganje ciljev", "Uporaba naprednih tehnologij", "Število funkcij"] },
-{ q: "Klasično je zgradba zgodbe sestavljena iz:", a: "3 dejanj", o: ["3 dejanj", "4 dejanj", "5 dejanj", "2 dejanj"] },
-{ q: "Fittov zakon določa uporabniško:", a: "učinkovitost", o: ["ambicioznost", "učinkovitost", "ekonomičnost", "kreativnost"] },
-{ q: "Kaj pomeni \"odzivno oblikovanje\" (responsive design)?", a: "Prilagoditev uporabniškega vmesnika različnim napravam", o: ["Razvoj samo za mobilne naprave", "Prilagoditev uporabniškega vmesnika različnim napravam", "Povečanje števila uporabniških vnosov", "Izdelava estetsko dovršenih izdelkov"] },
-{ q: "Fotoreportaža so:", a: "Fotografski posnetki s kratkim komentarjem", o: ["Video posnetki o fotografiji", "Fotografski posnetki brez komentarja", "Opis fotografij", "Fotografski posnetki s kratkim komentarjem"] },
-{ q: "Kaj pomeni izraz \"uporabniški tok\" (user flow)?", a: "Pot, ki jo uporabnik prehodi skozi izdelek za dosego cilja", o: ["Hitrost nalaganja aplikacije", "Število uporabnikov, ki uporabljajo izdelek", "Pretok podatkov v aplikaciji", "Pot, ki jo uporabnik prehodi skozi izdelek za dosego cilja"] },
-{ q: "Kaj drži za specifikacijo:", a: "vse od naštetega", o: ["specifikacijo izdelka delimo na tehnično in vsebinsko", "specifikacija naj bi bila tako natančna, da ne bi nastale razlike med izdelkom in pričakovanjem naročnika", "vse od naštetega", "specifikacija je podroben opis izdelka ali storitve"] },
-{ q: "Uporabniški vmesnik vpliva na:", a: "vse našteto", o: ["sluh", "vse našteto", "vid", "okus"] },
-{ q: "Med principe načrtovanja izdelkov ne uvrščamo:", a: "Gibbsov zakon", o: ["uporabinško izkušnjo", "Fittov zakon", "zgradbo zgodbe", "Gibbsov zakon"] },
-{ q: "Kaj je cilj UX oblikovanja?", a: "Ustvariti prijetno in učinkovito interakcijo za uporabnika", o: ["Ustvariti prijetno in učinkovito interakcijo za uporabnika", "Optimizirati stroške razvoja", "Povečati število funkcionalnosti", "Zasnovati najlepši izdelek"] },
-
-{ q: "Pri analizi konkurence ekipa išče izdelke, primerljive njihovemu, da oceni funkcionalnosti in zahteve. Po čem so izdelki ključno podobni?", a: "Po specifikaciji", o: ["Po stroških", "Po specifikaciji", "Po tveganjih", "Po času"] },
-{ q: "Pri večini projektov je za realističen načrt ključna vključenost ljudi, ki bodo delo izvajali. Kdo ga praviloma pripravi?", a: "Projektna ekipa", o: ["Stranka sama", "Vodja projekta sam", "Projektna ekipa", "Višje vodstvo"] },
-{ q: "Naročnik želi razumeti, kaj bo projekt dostavil, v katerih fazah, kdo je za kaj odgovoren in kako bo delo organizirano. Kaj je v tem primeru glavni namen projektnega načrta?", a: "Jasno določiti cilje, faze in odgovornosti", o: ["Zapisati seznam idej", "Opisati le zaključne faze projekta", "Jasno določiti cilje, faze in odgovornosti", "Izbrati člane ekipe"] },
-{ q: "Ekipa pripravlja standardni življenjski cikel projekta. Katera možnost ne sodi med glavne faze projekta?", a: "Postprodukcija", o: ["Načrtovanje", "Postprodukcija", "Zaključek", "Priprava"] },
-{ q: "Oddelek razvoja naroči IT oddelku izdelavo aplikacije za interno uporabo. Katera vrsta naročnika je to?", a: "Notranji naročnik", o: ["Zunanji naročnik", "Javnost kot naročnik", "Naročnik = izvajalec", "Notranji naročnik"] },
-{ q: "Projekt ima visoka pričakovanja glede kakovosti, zato želi vodja zmanjšati tveganje napak v končnem izdelku. Kateri pristop je najbolj učinkovit?", a: "S sprotnim preverjanjem in upoštevanjem standardov", o: ["Projekt zaključimo čim hitreje", "Odgovornost preložimo na zunanje izvajalce", "Kakovost prepustimo samo vodji ekipe", "S sprotnim preverjanjem in upoštevanjem standardov"] },
-{ q: "V projektni metodologiji se pojavi izraz organon v pomenu sredstva, s katerim nekaj izvedemo. Kaj pomeni?", a: "Orodje", o: ["Projekt", "Orodje", "Proces", "Prostor"] },
-{ q: "Pred potrditvijo projekta mora ekipa dokazati, da je rešitev izvedljiva. Kaj vodja projekta z ekipo v študiji izvedljivosti preveri najprej?", a: "Ali je izdelek tehnično izvedljiv", o: ["Ali je izdelek zaželen med uporabniki", "Ali je izdelek tehnično izvedljiv", "Vse od naštetega", "Ali je poslovno upravičen"] },
-{ q: "Ekipa je definirala cilje, vendar se pojavljajo nesporazumi glede pričakovanj in prioritet. S kom je nujno cilje formalno uskladiti, da se zmanjša tveganje napačnega razumevanja?", a: "Z naročnikom", o: ["Z upravnim odborom", "Z vodjo višje ekipe", "S projektnim inženirjem", "Z naročnikom"] },
-{ q: "Katera značilnost dela najbolj kaže, da je smiselno uporabiti projektni pristop (zaradi negotovosti in enkratnosti)?", a: "Namenjeno doseganju nečesa novega", o: ["Presega 160 ur napora", "Zahteva specializirana orodja", "Ima veliko dokumentacije", "Namenjeno doseganju nečesa novega"] },
-
-{ q: "Projekt se ne izvaja povsem po načrtu in vodja želi pravočasno zaznati zamude. Kaj je glavni namen spremljanja terminskega načrta?", a: "Ugotoviti odstopanja in jih pravočasno odpraviti.", o: ["Ugotoviti odstopanja in jih pravočasno odpraviti.", "Dokumentirati samo zaključno fazo projekta.", "Zmanjšati število nalog.", "Ustvariti več poročil za naročnika."] },
-{ q: "Pri oceni realnosti terminskega načrta vodja preveri, ali ima ekipa dovolj časa in ljudi. Kateri dejavnik ima največji vpliv na terminski načrt?", a: "Dosegljivost virov in razpoložljivost ekipe.", o: ["Število sestankov z naročnikom.", "Dosegljivost virov in razpoložljivost ekipe.", "Geografska lokacija projektne ekipe.", "Dolžina končnih poročil."] },
-{ q: "Pri preverjanju znanja projektne ekipe se pojavi trditev o terminskem načrtu, ki ni pravilna. Katera trditev ne drži?", a: "se redko prikaže v obliki gantograma", o: ["prikazuje časovno zaporedje dejavnosti", "se redko prikaže v obliki gantograma", "pogosto prikazuje mejnike projekta", "prikazuje dolžino dejavnosti (v dnevih)"] },
-{ q: "Preden lahko ekipa izdela terminski načrt, mora projekt ustrezno razčleniti. Katera je prva faza priprave terminskega načrta?", a: "Razdelitev projekta na dejavnosti in naloge", o: ["Razdelitev projekta na dejavnosti in naloge", "Določanje proračuna.", "Organiziranje uvodnega sestanka.", "Izbira orodij za komunikacijo."] },
-{ q: "Vodja projekta želi članom ekipe hitro in pregledno prikazati potek dela. Kaj omogoča gantogram znotraj terminskega načrta?", a: "Vizualno predstavitev nalog in časovnih okvirjev.", o: ["Vizualno predstavitev nalog in časovnih okvirjev.", "Upravljanje tveganj.", "Pregled nad finančnimi sredstvi projekta.", "Določitev odgovornosti za posamezne naloge."] },
-{ q: "Projekt vključuje več nalog z različno pomembnostjo. Zakaj je določanje prednostnih nalog v terminskem načrtu ključno?", a: "Da se ključne naloge zaključijo pravočasno.", o: ["Da se zmanjšaja število nalog.", "Da se omeji vključenost članov ekipe.", "Da se ključne naloge zaključijo pravočasno.", "Da se prilagodijo cilji projekta."] },
-{ q: "Gantogram je pripomoček, ki ga vodja projekta uporabi, ko želi hitro oceniti zaporedje nalog in njihove medsebojne povezave. Kaj gantogram v tem primeru najbolj učinkovito prikazuje?", a: "časovno zaporedje dejavnosti in njihovo medsebojno odvisnostjo", o: ["stroški", "specifikacijo", "časovno zaporedje dejavnosti in njihovo medsebojno odvisnostjo", "ciljno skupino"] },
-{ q: "Vodja projekta želi zmanjšati tveganje zamud že v fazi načrtovanja. Kateri ukrep je pri tem najbolj učinkovit?", a: "Z vključitvijo časovnih rezerv.", o: ["Z vključitvijo časovnih rezerv.", "Z uporabo enega samega kanala komunikacije.", "Z ignoriranjem tveganj.", "Z zmanjšanjem števila nalog."] },
-{ q: "Naročnik redno spremlja potek projekta in želi imeti jasen vpogled v roke in napredek. Kaj mu terminski načrt omogoča?", a: "Pregled nad roki in napredkom projekta.", o: ["Odobritev sprememb brez posvetovanja z ekipo.", "Omejevanje komunikacije z ekipo.", "Pregled nad roki in napredkom projekta.", "Določanje nalog za posamezne člane ekipe."] },
-{ q: "Pred izdelavo gantograma mora ekipa natančno razumeti, kaj je treba narediti in koliko časa bo to trajalo. Kaj je ključno pri pripravi terminskega načrta?", a: "Opredelitev vseh nalog in njihovega trajanja.", o: ["Opredelitev vseh nalog in njihovega trajanja.", "Določitev finančnih virov.", "Priprava končnega poročila.", "Izbira vodje projekta."] },
-
-{ q: "Med napredne jezikovne vzorce ne spada:", a: "Sva na različnih straneh zato _________", o: ["(Ali) si lahko zamislite ________?", "Sva na različnih straneh zato _________", "Dejstvo, da je [dejstvo] pomeni_______.", "Nihče ne more vedeti_____"] },
-{ q: "Tisti, ki so izraziti aplikativci (divergentni ljudje) se navadno vprašajo:", a: "KAJ ČE?", o: ["KAJ?", "ZAKAJ?", "KAJ ČE?", "KAKO?"] },
-{ q: "Kateri nivo ne spada med nivoje identite po Dilts:", a: "Osredotočenje", o: ["Sposobnosti", "Vrednote", "Okolje", "Osredotočenje"] },
-{ q: "Tisti, ki potrebujejo motivacijo se navadno vprašajo:", a: "ZAKAJ?", o: ["KAJ ČE?", "KAJ?", "KAKO?", "ZAKAJ?"] },
-{ q: "Kako pridobimo prepričanja in vrednote:", a: "S spraševanjem in opazovanjem", o: ["S spraševanjem in opazovanjem", "S prikimavanjem", "Z nasmeškom na obrazu", "S tehniko obrata"] },
-{ q: "Tisti ki so zbiralnci informacij se navadno vprašajo:", a: "KAJ?", o: ["KAJ?", "ZAKAJ?", "KAKO?", "KAJ ČE?"] },
-{ q: "Sistem 4MAT sestavljajo naslednje zaporedje:", a: "Kaj / Zakaj / Kako / Kaj če", o: ["Zakaj / Kaj če / Kako / Kaj", "Kaj / Zakaj / Kako / Kaj če", "Kaj če / Kaj / Kako / Zakaj", "Kako / Zakaj / Kaj / Kaj če"] },
-{ q: "Tisti, ki radi delajo eksperimente se navadno vprašajo:", a: "KAKO?", o: ["KAJ?", "KAJ ČE?", "ZAKAJ?", "KAKO?"] },
-{ q: "Med glavne tri čutne sisteme ne spada:", a: "Notranji", o: ["Vizualni", "Notranji", "Auditivni", "Kinestetični"] },
-{ q: "Potenciranje sugestij pomeni:", a: "Da sugestije čim večkrat ponovimo, vendar pod pragom zaznave", o: ["Da sugestije čim hitreje ponovimo, vendar ne več kot dve naenkrat", "Da sugestije čim manjkrat ponovimo v obliku ukazov", "Da sugestije čim manjkrat ponovimo, vendar pod pragom zaznave", "Da sugestije čim večkrat ponovimo, vendar pod pragom zaznave"] },
-
+{ q: "Kaj so Layer Styles funkcije?", a: "So funkcije, s katerimi dodajamo posebne učinke na posamezni layer.", o: ["So funkcije, s katerimi dodajamo posebne učinke na posamezni layer.", "Layer Styles uporabljamo, kadar želimo animirati transparenco (Opacity) objekta oz. layer-ja.", "So funkcije, ki določajo osnovne paramtere določenega layer-ja, kot so: rotacija, pozicija, transparenca in velikost.", "So funkcije, s katerimi dodajamo posebne učinke na vse layer-je hkrati, na posameznemu layer-ju pa uporaba ni mogoča."] },
+{ q: "Kaj nam omogoča funkcija Pre-Compose?", a: "Je funkcija, s katero izbrane layer-je združimo v novo kompozicijo.", o: ["Je središče layer-ja oz. objekta, ki določa središčno točko animacije.", "Je funkcija, s katero izbrane layer-je združimo v novo kompozicijo.", "So osnovne nastavitve programa After Effects.", "Je fukcija, s katero pred pričetkom animacije nastavimo parametre videa."] },
+{ q: "Ali lahko v After Effects programu spreminjamo barvo določenega objekta, ki je bil uvožen iz drugega programa?", a: "Da, to lahko storimo z uporobo funkcije Layer styles ali z uporabo efektov.", o: ["Da, vendar moramo predhodno vklopiti funkcijo 'Change Color' v v nastavitvah 'Composition Settings'.", "Ne, barvo določamo s programom, kjer je bil objekt izdelan.", "Da, to lahko storimo le z uporabo funkcije Layer styles.", "Da, to lahko storimo z uporobo funkcije Layer styles ali z uporabo efektov."] },
+{ q: "Kakšna je funkcija key frame-ov?", a: "S key frame-i določamo začetno in končno točko animacije. Z njimi določamo hitrost in način animacije.", o: ["S key frame-i določamo resolucijo in velikost končnega videa.", "S key frame-i določamo začetno in končno točko animacije. Z njimi vplivamo na vse parametre animacije, razen na hitrost animacije.", "S key frame-i določamo skupno dolžino videa.", "S key frame-i določamo začetno in končno točko animacije. Z njimi določamo hitrost in način animacije."] },
+{ q: "Katera funkcija nam omogoča, da pri importu iz Illustratorja oz. Photoshopa v After Effects ohranimo tudi vse layer-je?", a: "Pri importu izberemo fukcijo 'Import Kind: Composition'.", o: ["Pri importu izberemo fukcijo 'Import Kind: Composition'.", "Program After Effects samodejno zazna, da importirana datoteka vsebuje layer-je.", "Pri importu izberemo funkcijo 'Import Kind: Footage'.", "Pri importu izberemo funkcijo 'Import Kind: All Layers'."] },
+{ q: "Ali lahko spreminjamo dolžino timeline-a, čeprav smo z animacijo že pričeli?", a: "Da, to lahko storimo v nastavitvah 'Composition Settings'.", o: ["Da, vendar pri spremembi dolžine timeline-a izgubimo dosedaj narejeno animacijo.", "Da, v kolikor še nismo pričeli z uporabo efektov.", "Da, to lahko storimo v nastavitvah 'Composition Settings'.", "Ne, dolžino moramo nastaviti predhodno, vsaka nadaljna sprememba ni mogoča."] },
+{ q: "Kaj je Frame Rate?", a: "Je frekvenca pojavljanja posameznih sličic oz. frame-ov, kar omogoča gibanje slike.", o: ["Je parameter, ki določa velikost videa.", "Je frekvenca pojavljanja posameznih sličic oz. frame-ov, kar omogoča gibanje slike.", "S Frame Rate-i določamo začetno in končno točko animacije.", "Je parameter, ki določa razmerje med višino in širino videa."] },
+{ q: "Kaj je Render?", a: "Je ukaz, s katerim izvozimo animacijo v končni video, po določenih parametrih.", o: ["Je ukaz, s katerim izvozimo animacijo v končni video, po določenih parametrih.", "Je parameter, ki določa velikost videa.", "So osnovne nastavitve programa After Effects.", "Je funkcija, s katero kontroliramo hitrost rotacije objekta."] },
+{ q: "Kaj je Anchor Point?", a: "Je središče layer-ja oz. objekta, ki določa središčno točko animacije.", o: ["So točke, s katerimi kontroliramo hitrost in način animacije.", "Je funkcija, s katero kontroliramo hitrost rotacije objekta.", "Je točka, ki določa dolžino animacije.", "Je središče layer-ja oz. objekta, ki določa središčno točko animacije."] },
+{ q: "Ali je možna sočasna animacija transparence in rotacije?", a: "Da.", o: ["Da, vendar s tem izgubimo možnost uporabe efektov.", "Ne, ta kombinacija ni mogoča, ker animacija transparence ni mogoča.", "Da.", "Da, vendar le v načinu '16 bit per channel'."] },
+{ q: "Kako določimo začetek in konec renderja?", a: "To določimo z modrimi zavihki nad Timeline-om.", o: ["To določimo z modrimi zavihki nad Timeline-om.", "S key frame-i.", "Dolžino določamo z nastavitvijo Frame Rate.", "V 'Composition Settings' pred pričetkom projekta."] },
+{ q: "Kaj je Alpha Channel?", a: "Alpha Channel je kanal, ki poleg treh barvnih kanalov (RGB), vsebuje podatke o prosojnosti slike.", o: ["Alpha Channel je kanal, ki poleg treh barvnih kanalov (RGB), vsebuje podatke o prosojnosti slike.", "Alpha Channel je kanal, ki nastane po združitvi treh RGB kanalov v nov samostojen kanal. Njegova vrednost je R=0, G=0, B=0.", "Alpha Channel imenujemo layer, ki je po hierarhiji najvišje pozicioniran.", "Alpha Channel je kanal, ki nastane po združitvi treh RGB kanalov v nov samostojen kanal. Njegova vrednost je R=255, G=255, B=255."] },
+{ q: "Kako dodajamo tekst na timeline?", a: "V zavihku 'Layer' izberemo funkcijo 'New' in izberemo 'text'.", o: ["S klikom na 'Composition Settings' in izberemo 'add new text'.", "Izberemo funkcijo 'add new solid' in obkljukamo funkcijo 'text'.", "V zavihku 'Layer' izberemo funkcijo 'New' in izberemo 'text'.", "Tekst dodamo z effektom, ki ga apliciramo na 'solid'."] },
+{ q: "Kaj nam omogoča Alpha Matte funkcija?", a: "Alpha Matte funkcija nam omogoča kontrolo pojavnosti layer-ja s pomočjo zgornjega layer-ja.", o: ["Alpha Matte je kanal, ki poleg treh barvnih kanalov (RGB), vsebuje podatke o prosojnosti slike.", "Alpha Matte funkcija, je funkcija v nastavitvah 'Layer Settings', ki nam omogoča uporabo maske.", "Alpha Matte funkcija nam omogoča kontrolo pojavnosti layer-ja s pomočjo zgornjega layer-ja.", "Alpha Matte funkcija nam omogoča kontrolo pojavnosti layer-ja, kjer vrstni red dveh layerjev ni pomemben."] },
+{ q: "Kaj je Solid layer?", a: "Solid layer je enobarvni layer, ki ga ustvarimo s funcijo 'New Layer'.", o: ["Je funkcija, s katero izbrane layer-je združimo v novo kompozicijo.", "Je središče layer-ja oz. objekta, ki določa središčno točko animacije.", "Solid layer je enobarvni layer, ki ga ustvarimo s funcijo 'New Layer'.", "Je efekt, s katerim spreminjamo barvo layer-ja."] },
+{ q: "Kaj nam omogoča funkcija Mask Path?", a: "Mask Path funkcija nam omogoča animacijo maske, ki jo kontroliramo s key frame-i.", o: ["Mask path nam omogoča enak efekt, kot ga poznamo pri hitrem premikanju objekta (Motion Blur).", "Mask Path funkcija nam omogoča kontrolo pojavnosti layer-ja s pomočjo zgornjega layer-ja.", "Mask Path funkcija nam omogoča animacijo maske, ki jo kontroliramo s key frame-i.", "Z Mask Path funkcijo kontroliramo vse parametere ostalih layer-jev."] },
+{ q: "Kaj nam omogočajo maske?", a: "Maske so orodja, s katerimi kontroliramo vidnost layer-ja.", o: ["Maske so orodja, s katerimi kontroliramo vidnost layer-ja.", "Maske so črno področje na zgornjem in spodnjem delu videa za kontrolo razmerja.", "Maske so efekti, s katerimi kontroliramo transparenco layer-ja.", "Maske so efekti, ki jih ponavadi uporabljamo za kontrolo barve."] },
+{ q: "Ali lahko animiramo obliko maske?", a: "Da, to storimo s funkcijo Mask Path, animacijo pa kontroliramo s key frame-i.", o: ["Da, to storimo s funkcijo Mask Animate.", "Da, to storimo s funkcijo Mask Path, animacijo pa kontroliramo s key frame-i.", "Da, to storimo s funkcijo Mask Feather.", "Da, to storimo s funkcijo Mask Expansion."] },
+{ q: "Kaj nam omogoča funkcija 'Inverted' pri nastavitvah maske?", a: "Funkcija nam omogoča, da namesto izolacije predela layer-ja izberemo njeno okolico.", o: ["Funkcija nam omogoča, da prezrcalimo obstoječo obliko maske.", "Je središče maske, ki določa središčno točko animacije.", "Funkcija nam omogoča pričetek animacije maske.", "Funkcija nam omogoča, da namesto izolacije predela layer-ja izberemo njeno okolico."] },
+{ q: "Ali lahko uporabljamo več različnih mask na istem layer-ju?", a: "Da.", o: ["Da, vendar ne več kot 10.", "Ne.", "Da.", "Da, vendar ne več kot 3."] },
+{ q: "Kakšna je funkcija 'speed graph'?", a: "Je način pregleda graf editorja, pri čemer navpična os predstavlja hitrost, vodoravna pa čas.", o: ["Je interpolacija keyframe-ov in se v animaciji odraža kot pospešek.", "Je način pregleda graf editorja, pri čemer navpična os predstavlja hitrost, vodoravna pa čas.", "Je funkcija, s katero vklopimo 'Easy ease out' interpolacijo.", "Je funkcija, s katero vklopimo 'Easy ease in' interpolacijo."] },
+{ q: "Kaj je Graph editor?", a: "Je grafični prikaz poteka animacij s krivuljami.", o: ["Je grafični prikaz poteka animacij s krivuljami.", "Je orodje, s katerim izdelujemo in animiramo grafe.", "Je orodje, s katerim izdelujemo vektorske grafike.", "Je karakteristika shape layer-ja, ki prikazuje pot animacije."] },
+{ q: "Katera funkcija nam omogoča ločeno spreminjanje 'x' in 'y' krivulje pri poziciji?", a: "Separate dimensions.", o: ["Separate dimensions.", "Split X and Y axis.", "Ta funkcija v After Effects ne obstaja.", "Split X and Y value."] },
+{ q: "Kaj je Shape layer?", a: "Shape layer je layer, namenjen izdelavi in animaciji vektorskih grafik.", o: ["Je parameter, ki določa razmerje videa.", "Shape layer je layer, namenjen izdelavi in animaciji vektorskih grafik.", "Je layer, namenjen izdelavi in animaciji napisov.", "Je enobarvni layer velikosti kompozicije."] },
+{ q: "Kateri effect uporabljabljamo za spremembo barve solid layerja?", a: "Fill.", o: ["Fill.", "Barvo solid layerja ne moremo spreminjati kasneje.", "Color.", "Color changer."] },
+{ q: "Kaj prikazuje 'value graph'?", a: "prikazuje spremembo lastnosti po času.", o: ["prikazuje spremembo lastnosti po času.", "spremembo časa glede na hitrost predvajanja.", "hitrost spremembe po času.", "vse našteto."] },
+{ q: "Kakšno obliko ima krivulja v 'value graph' ogledu, kadar objekt zavira?", a: "Krivuljo s strmim naklonom.", o: ["Krivuljo s položnim naklonom.", "Vodoravno črta.", "Krivuljo s strmim naklonom.", "Vertikalno črta."] },
+{ q: "Kako lahko povežemo dva layerja, da se drugi animira enako kot prvi?", a: "S fukncijo parent and link.", o: ["Layerjev ne moremo povezati.", "Z efektom Link Layers.", "S fukncijo parent and link.", "V nastavitvah Layer Setting izberemo funkcijo 'Link layer to'."] },
+{ q: "Kakšno obliko ima krivulja v 'value graph' ogledu, kadar objekt pospešuje?", a: "Krivuljo s položnim naklonom.", o: ["Krivuljo s strmim naklonom.", "Vertikalno črta.", "Krivuljo s položnim naklonom.", "Vodoravno črta."] },
+{ q: "Kako lahko dodajamo sence na layer?", a: "S funkcijo Layer styles ali z efektom Drop Shadow.", o: ["S funkcijo Layer styles ali z efektom Drop Shadow.", "Le z efektom Drop Shadow.", "V nastavitvah layer setting izberemo senčenje.", "Le preko Layer styles."] },
+{ q: "Kako spreminjamo nastavitve kamere?", a: "Z dvojnim klikom na layer na kateremu imamo kamero.", o: ["Z dvojnim klikom na layer na kateremu imamo kamero.", "Nastavitve kamere določimo na začetku, kasneje jih ni mogoče spreminjati.", "V nastavitvah Composition Settings.", "Z efektom Change Camera Settings."] },
+{ q: "Na timeline imamo Layer A in Layer B (3D). Layer B je prvi po hierarhiji, Layer A pa je bližje kameri. Kateri je v ospredju?", a: "Layer A, ker je po globini bližje kameri.", o: ["Layer B, ker je po hierarhiji na prvem mestu.", "Layer A, ker je po globini bližje kameri."] },
+{ q: "Kako spreminjamo dolžino obstoječe kompozicje?", a: "V nastavitvah Composition settings.", o: ["Z efektom Composition Lenght.", "V nastavitvah New Composition.", "V nastavitvah Layer styles.", "V nastavitvah Composition settings."] },
+{ q: "Ali lahko uporabljamo maske na 3D layer-ju?", a: "Da.", o: ["Ne.", "Da, vendar s tem izgubimo možnost uporabe animacije po 'x' osi.", "Da, vendar s tem izgubimo možnost animcaije po 'z' osi.", "Da."] },
+{ q: "Kaj pridobimo z vklopom 3D layer-ja?", a: "Pridobimo možnost animacije elementa v prostoru.", o: ["Pridobimo možnost dodajanja kamere.", "Poleg višine in širine pridobimo tudi globino elementa.", "Pridobimo možnost animacije elementa v prostoru.", "Z vklopom pridobimo kamero."] },
+{ q: "Kako na timeline dodamo kamero?", a: "V funkciji 'New layer' izberemo 'Camera'.", o: ["Kamera se doda takoj z vklopom 3D funkcije.", "V funkciji 'New layer' izberemo 'Camera'.", "Vključiti moramo funkcijo '3D Project'.", "V nastavitvah 'Composition Settings' vključimo 'Add 3D Camera'."] },
+{ q: "Kaj je 3D layer?", a: "3D layer je lahko katerikoli layer, ki ima vklopljen simbol kocke.", o: ["3D layer je solid layer s funkcijo 'Allow 3D layers'.", "3D layer je solid layer, ki ga dodamo s funkcijo 'Add new 3D layer'.", "3D layer je lahko samo text layer.", "3D layer je lahko katerikoli layer, ki ima vklopljen simbol kocke."] },
+{ q: "Ali lahko animiramo grafične elemente v 3D prostoru, če nimamo dodane kamere?", a: "Da.", o: ["Da, vendar ne po z osi.", "Da, vendar ne moremo animirati rotacije.", "Ne.", "Da."] },
+{ q: "Katera funkcija nam omogoča, da lahko layer kontroliramo s kamero?", a: "Na layerju izberemo način 3D layer.", o: ["Z efektom Make visible to camera.", "Na layerju izberemo način Camera Option.", "Na layerju izberemo način 3D layer.", "Z efektom Camera Control."] },
+{ q: "Kaj predstavlja 'z' os?", a: "globino.", o: ["globino.", "širino.", "čas.", "višino."] },
+{ q: "Kaj ponazarjajo barve trackerjev pri metodi 'Track camera'?", a: "Kakovost trackerja (zelena = najboljši zapis).", o: ["Lažja preglednost.", "Oddaljenost trackerjev od kamere.", "Kakovost trackerja (rdeča = najboljši).", "Kakovost trackerja (zelena = najboljši zapis)."] },
+{ q: "Ali lahko dodajamo več trackerjev na isti video clip?", a: "DA.", o: ["DA, v kolikor za vsak tracker uporabimo svoj Null object.", "NE.", "Da, vendar ne moremo posnemati rotacije.", "DA."] },
+{ q: "Kako posnemamo gibanje kamere?", a: "Z uporabo funkcije 'Track camera'.", o: ["Z uporabo funkcije 'Track camera'.", "Z uporabo funkcije 'One node Camera'.", "Z uporabo funkcije 'Track Motion'.", "Z uporabo funkicje 'Stabilize Motion'."] },
+{ q: "Ali lahko učinkujem z efektom na layer, če ga ne želim uporabiti direktno na njem?", a: "DA, z uporabo Adjustment Layerja.", o: ["Da, z uporabo Null Object.", "Da, z uporabo Parent and Link.", "Ne, efekt mora biti direktno na layerju.", "DA, z uporabo Adjustment Layerja."] },
+{ q: "Kaj je Camera tracking?", a: "Je posnemanje gibanje kamere s pomočjo funkcije 'Track Camera'.", o: ["Je posnemanje gibanje kamere s pomočjo funkcije 'Track Camera'.", "So osnovne nastavitve kamere.", "Je razdalja med kamero in objektom.", "Tako imenujemo animcajo kamere."] },
+{ q: "Ali lahko pri uporabi funkcije Trak Motion ročno premikamo trackerje?", a: "Da, to je potrebno storiti kadar se točka posnemanja premakne.", o: ["Ne, to lahko storimo le s popravkom kamere.", "Ne, le po končanem postopku.", "Da, to je potrebno storiti kadar se točka posnemanja premakne.", "Ne, začeti moramo znova."] },
+{ q: "Kateri efekt uporabimo za odstranitev zelene barve 'Chroma'?", a: "Keylight.", o: ["Green Cast.", "Keylight.", "Fill.", "Color Range."] },
+{ q: "Kaj je motion tracking?", a: "Je tehnika s katero posnemamo gibanje objekta.", o: ["Je razdalja med črkami.", "Je tehnika s katero posnemamo gibanje objekta.", "Je efekt, ki olajša animacijo pozicije.", "Je animacija dveh elementov."] },
+{ q: "Kaj je Null object?", a: "Je layer, katerega ponavadi uporabljamo za animacijo večih objektov sočasno.", o: ["Je funkcija 'parent and link'.", "Je layer, na katerega dodamo efekt za vse spodnje layerje.", "Je layer, katerega ponavadi uporabljamo za animacijo večih objektov sočasno.", "Je layer, na katerega dodajamo vektorske like."] },
+{ q: "Kdaj uporabljamo funkcijo 'Parent and Link'?", a: "Kadar želimo povezati dva layerja, da se oba gibljeta enako.", o: ["Kadar želimo zamenjati obstoječ layer.", "Kadar želimo enako velikost in barvo.", "Kadar želimo enak efekt.", "Kadar želimo povezati dva layerja, da se oba gibljeta enako."] }
 ];
 
    function shuffleArray(array) {
