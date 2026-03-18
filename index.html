@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vsa Vprašanja</title>
+    <title>Vsa Vprašanja iz PDF</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
         .quiz-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); max-width: 800px; width: 100%; position: relative; }
@@ -86,6 +86,41 @@ body.dark-mode #dark-mode-toggle {
     color: white;
     border: 1px solid #666;
 }
+
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Manj praznega prostora okoli kviza */
+    }
+
+    .quiz-container {
+        padding: 15px; /* Manj notranjega odmika v belem kvadratu */
+        width: 95%;    /* Da kviz ne gleda čez robove */
+    }
+
+    h2 {
+        font-size: 1.1em; /* Malo manjši naslov, da ne zavzame pol zaslona */
+    }
+
+    .question {
+        font-size: 1em;   /* Prilagojena velikost pisave vprašanja */
+    }
+
+    button.option-btn {
+        padding: 12px;    /* Večji gumbi za lažje pritiskanje s prstom */
+        font-size: 0.9em; /* Malo manjši tekst, da se dolgi odgovori ne lomijo grdo */
+    }
+
+    .stats {
+        font-size: 0.8em; /* Manjša statistika zgoraj desno */
+    }
+
+    .header {
+        flex-wrap: wrap;  /* Če zmanjka prostora, elementi skočijo v novo vrsto */
+    }
+}
+
+
     </style>
 </head>
 <body>
